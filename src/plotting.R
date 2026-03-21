@@ -4,13 +4,11 @@
 #
 # Contains all ggplot-based visualization functions used in the analysis.
 #
-# WHAT'S NEW vs. the original notebook:
+# WHAT'S NEW vs. the SEITRNet notebook:
 #   - Extracted from inline notebook cells into reusable, documented functions.
 #   - plot_experiment_diagnostics() is NEW: combines optimization trace +
 #     control profile + compartment dynamics into a single call, replacing
 #     the manually assembled grid.arrange blocks.
-#   - Deprecated ggplot2 size= parameter replaced with linewidth= to suppress
-#     warnings in ggplot2 >= 3.4.
 #   - All functions accept the structured output from run_full_experiment(),
 #     eliminating the need to manually extract df_avg, df_min, df_max, etc.
 # ============================================================================
@@ -21,7 +19,7 @@ library(gridExtra)
 # --------------------------------------------------------------------------
 # Plot a single SEITR compartment with min/max shading and no-control dashed
 #
-# UNCHANGED logic from the original plot_compartment_band(), but:
+# UNCHANGED logic from the SEITRNet plot_compartment_band(), but:
 #   - Uses linewidth= instead of deprecated size= for line geoms
 #   - Accepts data directly rather than requiring global variable names
 # --------------------------------------------------------------------------
@@ -45,7 +43,7 @@ plot_compartment_band <- function(df_avg, df_min, df_max, df_avg_no_control,
 # --------------------------------------------------------------------------
 # Plot compartment with ODE overlay (controlled + uncontrolled ODE curves)
 #
-# UNCHANGED logic from original plot_compartment_band_overlay(), but:
+# UNCHANGED logic from SEITRNet plot_compartment_band_overlay(), but:
 #   - Uses linewidth= instead of deprecated size=
 #   - Accepts ODE data.frame with standardized column names
 # --------------------------------------------------------------------------
@@ -74,7 +72,7 @@ plot_compartment_band_overlay <- function(df_avg, df_min, df_max,
 # --------------------------------------------------------------------------
 # Plot ODE optimal control results (convergence + control + compartments)
 #
-# UNCHANGED visualization logic, but packaged as a single function call.
+# Same visualization logic, but packaged as a single function call.
 # --------------------------------------------------------------------------
 plot_ode_results <- function(ode_sol) {
   # Convergence trace
