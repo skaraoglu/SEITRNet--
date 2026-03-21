@@ -32,7 +32,7 @@
 //   5. R's RNG via Rcpp (R::runif, R::rbinom, R::rpois).
 //      Ensures compatibility with R's set.seed() for CRN and L'Ecuyer-CMRG.
 //
-// EDGE ADDITION METHODS (updated to match Chapter 1):
+// EDGE ADDITION METHODS (coded to match SEITRNet):
 //   ER: Sample round(p * N_alive) nodes uniformly, connect to all.
 //       (NOT independent Bernoulli per node — fixed count preserves
 //       expected degree structure during demographic events.)
@@ -45,9 +45,6 @@
 //       disconnected new node, BFS distances are all Inf, so the order
 //       falls back to index order, matching the R behavior.)
 //
-// ACADEMIC INTEGRITY NOTE:
-//   The probabilistic model is IDENTICAL to the published description.
-//   Network generation and edge addition match Chapter 1's R implementation.
 // ============================================================================
 
 #include <Rcpp.h>
@@ -212,22 +209,12 @@ void generate_ws(std::vector<int>& adj, int n, double rewire_p, int nei, int max
 }
 
 // ===========================================================================
-// NEW-NODE EDGE ADDITION (for demographic recruitment)
-//
-// UPDATED: All three methods now match the Chapter 1 R implementations
-// exactly. The original refactored code had different stochastic mechanisms;
-// these have been corrected to preserve network structural properties
-// during demographic events.
+// NODE EDGE ADDITION (for demographic recruitment)
 // ===========================================================================
 
-// --- ER: Fixed-count attachment ---
-// Chapter 1: nodes_to_attach <- sample(V(g), size=min(round(init_p*vcount(g)), vcount(g)-1))
+// --- ER: ---
+// nodes_to_attach <- sample(V(g), size=min(round(init_p*vcount(g)), vcount(g)-1))
 //            for (node_to_attach in nodes_to_attach) add_edges(...)
-//
-// CORRECTION: Previous code used independent Bernoulli per node (each edge
-// independently with prob p). Chapter 1 draws a FIXED count of round(p*N)
-// nodes and connects to all of them. The fixed-count approach preserves the
-// expected degree of new nodes more tightly.
 void connect_new_node_er(int v, std::vector<int>& adj, std::vector<int>& status,
                          double p, int max_n) {
   // Collect alive nodes (excluding v)
@@ -251,15 +238,10 @@ void connect_new_node_er(int v, std::vector<int>& adj, std::vector<int>& status,
 }
 
 // --- BA: Mean-degree-based preferential attachment ---
-// Chapter 1: degree <- degree(g, mode="all")
-//            prob <- degree / sum(degree)
-//            nodes_to_attach <- sample(V(g), size=min(round(mean(degree)), vcount(g)), prob=prob)
-//            for (node_to_attach in nodes_to_attach) add_edges(...)
-//
-// CORRECTION: Previous code used round(n_par1 * n_alive) as the attachment
-// count. Chapter 1 uses round(mean_degree) of the CURRENT graph, which
-// adapts to the actual topology and preserves the power-law degree
-// distribution under demographic turnover.
+// degree <- degree(g, mode="all")
+// prob <- degree / sum(degree)
+// nodes_to_attach <- sample(V(g), size=min(round(mean(degree)), vcount(g)), prob=prob)
+// for (node_to_attach in nodes_to_attach) add_edges(...)
 void connect_new_node_ba(int v, std::vector<int>& adj, std::vector<int>& status,
                          double n_par1, int max_n) {
   // Collect alive nodes and compute their degrees
@@ -315,17 +297,10 @@ void connect_new_node_ba(int v, std::vector<int>& adj, std::vector<int>& status,
 }
 
 // --- WS: Shortest-path nearest-neighbor attachment with rewiring ---
-// Chapter 1: paths <- shortest.paths(g, v=vcount(g))
-//            nearest_neighbors <- order(paths)[2:(k+1)]
-//            add_edges(g, c(rbind(rep(vcount(g), k), nearest_neighbors)))
-//            for (neighbor in nearest_neighbors) { rewire with prob p }
-//
-// CORRECTION: Previous code randomly sampled k nodes. Chapter 1 uses BFS
-// shortest paths from the new node to all alive nodes to determine the k
-// nearest neighbors. Since the new node starts disconnected, all BFS
-// distances are infinite, and the order falls back to index order — this
-// preserves the ring locality of the WS structure. After connecting, each
-// edge is rewired with probability p to a random non-neighbor.
+// paths <- shortest.paths(g, v=vcount(g))
+// nearest_neighbors <- order(paths)[2:(k+1)]
+// add_edges(g, c(rbind(rep(vcount(g), k), nearest_neighbors)))
+// for (neighbor in nearest_neighbors) { rewire with prob p }
 //
 // NOTE: BFS from a disconnected node yields all Inf distances. R's order()
 // on tied Inf values preserves the original index order. In C++ we replicate
@@ -506,7 +481,7 @@ List run_seitr_simulation_cpp(
     for (int t_idx = 0; t_idx < n_times; t_idx++) {
       double u1 = u1_profile[t_idx];
 
-      // ---- TRANSITION SWEEP (sequential, matching Algorithm 1) ----
+      // ---- TRANSITION SWEEP (sequential, matching SEITRNet) ----
       for (int v = 0; v < max_n; v++) {
         if (status[v] == ST_DEAD) continue;
 
