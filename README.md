@@ -197,8 +197,8 @@ The SEITRNet codebase (pure R, igraph-based, monolithic notebook) required appro
 ## Repository Structure
 
 ```
-├── ch3_analysis.ipynb           # Main experiment pipeline (R kernel)
-├── ch3_supplement.ipynb         # Extended methods, results, visualizations
+├── main_analysis.ipynb           # Main experiment pipeline (R kernel)
+├── supplement.ipynb         # Extended methods, results, visualizations
 ├── diagnosis.ipynb              # Pre-experiment validation (22 tests, 135 assertions)
 ├── experiment_run.ipynb         # Lightweight standalone experiment runner
 ├── README.md
