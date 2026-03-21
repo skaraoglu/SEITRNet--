@@ -2,15 +2,15 @@
 # ode_control.R — Deterministic ODE Optimal Control Solver
 # ============================================================================
 #
-# DIRECT TRANSLITERATION of the original notebook cells 12-14.
+# DIRECT TRANSLITERATION of the original MATLAB code.
 # Wrapped in a function for reuse. No algorithmic changes whatsoever.
 #
 # The forward-backward sweep method (Pontryagin's Maximum Principle) for
 # the SEITR model with time-dependent treatment control u1(t).
 #
-# CRITICAL: Every formula, every RK4 midpoint convention, the control
+# NOTE: Every formula, every RK4 midpoint convention, the control
 # update rule, the convergence criterion, and the objective computation
-# are copied verbatim from the original code. The only structural change
+# are taken verbatim from the SEITRNet. The only structural change
 # is wrapping the inline code into a callable function.
 # ============================================================================
 
@@ -117,7 +117,7 @@ solve_ode_optimal_control <- function(
 
   # =========================================================================
   # FORWARD-BACKWARD SWEEP ITERATION
-  # Copied VERBATIM from original cell 14. Every RK4 midpoint, every
+  # Copied VERBATIM from SEITRNet. Every RK4 midpoint, every
   # convergence criterion term, every indexing convention is preserved.
   # =========================================================================
   while (test < 0) {
@@ -172,9 +172,8 @@ solve_ode_optimal_control <- function(
     }
 
     # --- BACKWARD: adjoint equations (RK4, backward in time) ---
-    # EXACT COPY of original backward sweep. The midpoint convention
-    # uses "state[j] - 0.5*h" (MATLAB FBSM style), NOT interpolated
-    # midpoints. This is the convention from the original code.
+    # EXACT COPY of SEITRNet. The midpoint convention
+    # uses "state[j] - 0.5*h" (MATLAB FBSM style), NOT interpolated midpoints.
     for (i in 1:(L - 1)) {
       j <- L + 1 - i
 
@@ -209,8 +208,8 @@ solve_ode_optimal_control <- function(
       lambda5[j-1] <- lambda5[j] - (h/6)*(d1 + 2*d2 + 2*d3 + d4)
     }
 
-    # --- OBJECTIVE FUNCTIONAL (Simpson's rule, EXACT original formula) ---
-    # Original uses 0.5*w1 for the control cost term.
+    # --- OBJECTIVE FUNCTIONAL (Simpson's rule) ---
+    # SEITRNet uses 0.5*w1 for the control cost term.
     JE <- E[1] + E[L] + 4*sum(E[seq(2, L-1, by=2)]) + 2*sum(E[seq(3, L-2, by=2)])
     JI <- I[1] + I[L] + 4*sum(I[seq(2, L-1, by=2)]) + 2*sum(I[seq(3, L-2, by=2)])
     JW <- 0.5*w1*(u1[1]^2 + u1[L]^2 + 4*sum(u1[seq(2, L-1, by=2)]^2) + 2*sum(u1[seq(3, L-2, by=2)]^2))
@@ -218,15 +217,15 @@ solve_ode_optimal_control <- function(
     FV_history[itr]  <- J
     itr_history[itr] <- itr
 
-    # --- CONTROL UPDATE (EXACT original formula) ---
-    # Original: ustar <- pmin(zeta, pmax(0, (I * (lambda3 - lambda4)) / w1))
-    #           u1 <- 0.5 * (ustar + oldu1)
+    # --- CONTROL UPDATE ---
+    # ustar <- pmin(zeta, pmax(0, (I * (lambda3 - lambda4)) / w1))
+    # u1 <- 0.5 * (ustar + oldu1)
     # The 0.5 averaging with the old control is critical for stability.
     ustar <- pmin(zeta, pmax(0, (I * (lambda3 - lambda4)) / w1))
     u1 <- 0.5 * (ustar + oldu1)
 
-    # --- CONVERGENCE CHECK (EXACT original formula) ---
-    # Original: delta*sum(|x|) - sum(|old_x - x|) > 0 for all variables
+    # --- CONVERGENCE CHECK ---
+    # delta*sum(|x|) - sum(|old_x - x|) > 0 for all variables
     temp1  <- delta_conv*sum(abs(u1)) - sum(abs(oldu1 - u1))
     temp2  <- delta_conv*sum(abs(S)) - sum(abs(oldS - S))
     temp3  <- delta_conv*sum(abs(E)) - sum(abs(oldE - E))
