@@ -5,15 +5,15 @@
 # Contains numerical integration, control-profile expansion, and data helpers
 # used by both the ODE solver and the network optimization pipeline.
 #
-# WHAT'S NEW vs. the original notebook:
+# WHAT'S NEW vs. the SEITRNet notebook:
 #   - Functions previously defined inline in notebook cells are now centralized.
 #   - get_ode_initial_guess() is NEW: downsamples the ODE optimal control to K
-#     piecewise-constant segments for optimizer warm-start (Recommendation #8).
+#     piecewise-constant segments for optimizer warm-start.
 # ============================================================================
 
 # --------------------------------------------------------------------------
 # Simpson's rule integration of the SEITR objective functional
-# UNCHANGED from the original.
+# Kept the original from the SEITRNet notebook.
 # --------------------------------------------------------------------------
 calculate_objective_functional <- function(results_df) {
   n <- nrow(results_df)
@@ -36,7 +36,7 @@ calculate_objective_functional <- function(results_df) {
 
 # --------------------------------------------------------------------------
 # Expand K piecewise-constant segment parameters to a full time-grid profile
-# UNCHANGED from the original.
+# UNCHANGED from the SEITRNet
 # --------------------------------------------------------------------------
 expand_u1 <- function(params_seg, total_length, interval_length, zeta) {
   prof <- rep(params_seg, each = interval_length)[1:total_length]
@@ -45,17 +45,6 @@ expand_u1 <- function(params_seg, total_length, interval_length, zeta) {
 
 # --------------------------------------------------------------------------
 # NEW: Extract an informed initial guess from the ODE optimal control.
-#
-# FIX: The original used (k-1)*interval_length+1 as idx_start, which
-# overruns total_steps when K does not divide total_steps evenly (e.g.,
-# K=20, total_steps=101 → interval_length=6, segments 18-20 start at
-# indices 103,109,115 which are past the 101-element vector → NaN).
-#
-# The fix uses the SAME segment assignment as expand_u1: build a vector
-# of segment IDs via rep(1:K, each=interval_length)[1:total_steps], then
-# average the ODE values within each segment. This guarantees every
-# segment maps to at least one time point and the segmentation is
-# consistent with how expand_u1 will later reconstruct the profile.
 # --------------------------------------------------------------------------
 get_ode_initial_guess <- function(ode_u1, ode_time, t_max, K, dt = 1) {
   net_times       <- seq(0, t_max, by = dt)
@@ -72,7 +61,7 @@ get_ode_initial_guess <- function(ode_u1, ode_time, t_max, K, dt = 1) {
     if (length(idx) > 0) {
       seg_values[k] <- mean(u1_interp[idx])
     } else {
-      # Fallback: segment has no assigned points (should not happen now)
+      # Fallback: segment has no assigned points
       seg_values[k] <- seg_values[max(1L, k - 1L)]
     }
   }
