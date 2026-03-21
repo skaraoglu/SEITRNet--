@@ -120,7 +120,7 @@ All network parameters are **anchored to the ER connectivity probability** $p$, 
                                  │ all passed
                                  ▼
 ┌──────────────────────────────────────────────────────────────────────────┐
-│                          ch3_analysis.ipynb                              │
+│                          main_analysis.ipynb                             │
 │                                                                          │
 │  ┌─────────────┐    ┌─────────────────────┐    ┌────────────────────┐    │
 │  │ ODE Solver  │    │  Experiment 1       │    │  Experiment 3      │    │
