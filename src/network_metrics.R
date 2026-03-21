@@ -1,11 +1,9 @@
 # ============================================================================
-# network_metrics.R — Network Topology Metrics for Cross-Chapter Analysis
+# network_metrics.R — Network Topology Metrics
 # ============================================================================
 #
 # Computes network-level summary statistics on contact networks generated
-# by igraph. These are the SAME metrics used in Chapter 4's brain network
-# analysis (H4: clustering C, path length L, small-world sigma, modularity Q),
-# enabling direct cross-chapter comparison.
+# by igraph. 
 #
 # The C++ simulation kernel uses an internal flat adjacency matrix and does
 # not expose network structure to R. This file generates fresh igraph
@@ -13,7 +11,7 @@
 # on those networks. Since metrics are measured at t=0 (before demographic
 # events), this is statistically equivalent to measuring inside the kernel.
 #
-# Chapter 1's Algorithm 1 already records (P_k, C, l_avg, |C_max|) per
+# SEITRNet already records (P_k, C, l_avg, |C_max|) per
 # timestep during simulation. Here we replicate and extend those metrics
 # in a standalone function for the post-hoc Experiment 2 analysis.
 # ============================================================================
@@ -39,7 +37,7 @@ generate_igraph_network <- function(network_type, n, n_par1, n_par2 = 10L) {
 # --------------------------------------------------------------------------
 # Compute topology metrics on a single igraph object
 #
-# Returns a named list matching Chapter 4's H4 metrics plus degree stats.
+# Returns a named list and degree stats.
 # --------------------------------------------------------------------------
 compute_topology_metrics <- function(g) {
   n_nodes <- igraph::vcount(g)
@@ -52,11 +50,11 @@ compute_topology_metrics <- function(g) {
   deg_skew     <- if (sd(deg) > 0) mean(((deg - mean(deg)) / sd(deg))^3) else 0
   deg_max      <- max(deg)
 
-  # Clustering coefficient (global transitivity) — same as Chapter 4
+  # Clustering coefficient (global transitivity)
   C <- igraph::transitivity(g, type = "global")
   if (is.nan(C)) C <- 0
 
-  # Average shortest path length (largest connected component) — same as Chapter 4
+  # Average shortest path length (largest connected component)
   comps    <- igraph::components(g)
   lcc_ids  <- which(comps$membership == which.max(comps$csize))
   lcc_frac <- length(lcc_ids) / n_nodes
@@ -68,7 +66,7 @@ compute_topology_metrics <- function(g) {
     L <- Inf
   }
 
-  # Small-world index sigma = (C/C_rand) / (L/L_rand) — same formula as Chapter 4
+  # Small-world index sigma = (C/C_rand) / (L/L_rand)
   # C_rand and L_rand for an ER random graph with same n and mean degree
   p_equiv <- deg_mean / (n_nodes - 1)
   C_rand  <- p_equiv  # Expected clustering for ER G(n,p)
@@ -83,7 +81,7 @@ compute_topology_metrics <- function(g) {
     NA_real_
   }
 
-  # Modularity (Louvain community detection) — same as Chapter 4
+  # Modularity (Louvain community detection)
   if (n_edges > 0) {
     comm <- igraph::cluster_louvain(igraph::as.undirected(g))
     Q    <- igraph::modularity(comm)
