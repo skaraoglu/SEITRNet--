@@ -77,7 +77,6 @@ The integrand balances epidemiological burden ($E + I$) against quadratic contro
 
 **Experiment 2 — Structural Metrics** (post-hoc)
 - $C$, $L$, $\sigma$, $Q$, degree distribution moments
-- Identical metrics to Chapter 4 brain network analysis (H4)
 - Rank correlation with control performance gap
 
 </td>
@@ -155,7 +154,7 @@ All network parameters are **anchored to the ER connectivity probability** $p$, 
 
 **Compiled C++ simulation kernel** — The SEITR agent-based model (697 lines of C++) processes all status transitions, demographic events, and topology-preserving edge addition in compiled code via Rcpp. A flat `int[max_n × max_n]` adjacency matrix provides O(1) edge queries with perfect cache locality. Dead nodes are soft-deleted (flagged, not removed) and their slots recycled for births, eliminating the O(V+E) `igraph::delete_vertices()` reindexing that dominated runtime in the SEITRNet codebase.
 
-**Chapter 1–consistent network generators** — ER uses fixed-count node sampling (not independent Bernoulli); BA uses mean-degree preferential attachment where `mean_degree` divides by `n_alive + 1` (matching R's `mean(degree(g))`); WS uses BFS nearest-neighbor search with stochastic rewiring. These generators are applied both at initialization and during demographic edge addition, preserving topology-specific structural properties across the full simulation horizon.
+**SEITRNet–consistent network generators** — ER uses fixed-count node sampling (not independent Bernoulli); BA uses mean-degree preferential attachment where `mean_degree` divides by `n_alive + 1` (matching R's `mean(degree(g))`); WS uses BFS nearest-neighbor search with stochastic rewiring. These generators are applied both at initialization and during demographic edge addition, preserving topology-specific structural properties across the full simulation horizon.
 
 **Forward–backward sweep ODE solver** — Verbatim transliteration of the SEITRNet MATLAB-style FBSM with RK4 midpoint integration, 0.5-averaging control update for stability, and Simpson's-rule objective evaluation. Converges in exactly 12 iterations to $J_{\text{ODE}} = 563.314$ — matching the published SEITRNet+OptCont result to four decimal places.
 
@@ -212,7 +211,7 @@ The SEITRNet codebase (pure R, igraph-based, monolithic notebook) required appro
 │   ├── experiment.R             # run_experiment(): optimization, forward, no-control modes
 │   ├── utils.R                  # Simpson's rule, expand_u1, ODE warm-start extraction
 │   ├── plotting.R               # ggplot2 visualization functions
-│   └── network_metrics.R        # Topology metrics (C, L, σ, Q) — aligned with Chapter 4
+│   └── network_metrics.R        # Topology metrics (C, L, σ, Q)
 │
 └── results/
     ├── ch3_analysis_log.txt     # Complete timestamped session log
