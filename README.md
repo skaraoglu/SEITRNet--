@@ -21,7 +21,7 @@ This repository contains the analysis pipeline for SEITRNet++ on dynamics, contr
 
 We deploy a **stochastic SEITR (Susceptible–Exposed–Infected–Treated–Recovered) agent-based model** on three canonical network families — Erdős–Rényi, Barabási–Albert, and Watts–Strogatz — and use **L-BFGS-B multi-start optimization** on the simulation objective to find network-aware treatment policies.
 
-In contrast with SEITRNet, the simulation kernel has been **rewritten from scratch in C++** (via Rcpp) for a speedup over the SEITRNet pure-R codebase, enabling a 69-experiment parameter sweep that completes in under 5 hours.
+Updating the SEITRNet; the simulation kernel has been **rewritten from scratch in C++** (via Rcpp) for a speedup over the SEITRNet pure-R codebase, enabling a 69-experiment parameter sweep that completes in under 5 hours.
 
 
 ---
