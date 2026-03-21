@@ -188,8 +188,8 @@ The SEITRNet codebase (pure R, igraph-based, monolithic notebook) required appro
 | 11 | **Segment expansion fix** | `(k-1)*interval_length+1` overruns for non-divisible $K$ | `rep(1:K, each=interval_length)[1:total_steps]` matching `expand_u1` | Eliminates NaN for $K \nmid (T+1)$ |
 | 12 | **Pre-experiment diagnosis** | No validation before committing to long runs | 22-section, 135-assertion validation notebook | Catches bugs before multi-hour experiments |
 | 13 | **Session logging** | No persistent record of intermediate results | Timestamped log of every experiment step, timing, and key result | Independent review from log file alone |
-| 14 | **Principled parameter derivation** | Ad-hoc BA and WS parameters | All parameters derived from ER anchor $p$ (Chapter 1 convention) | Direct cross-topology comparability |
-| 15 | **Network topology metrics** | Metrics computed during simulation but never analyzed | Dedicated `network_metrics.R`; same metrics as Chapter 4 brain analysis | Enables cross-chapter bridge |
+| 14 | **Principled parameter derivation** | Ad-hoc BA and WS parameters | All parameters derived from ER anchor $p$ (SEITRNet convention) | Direct cross-topology comparability |
+| 15 | **Network topology metrics** | Metrics computed during simulation but never analyzed | Dedicated `network_metrics.R` | Enables cross-chapter bridge |
 
 ---
 
