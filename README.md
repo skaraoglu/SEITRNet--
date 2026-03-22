@@ -8,7 +8,6 @@
 [![C++](https://img.shields.io/badge/C++-Rcpp_Kernel-00599C?logo=cplusplus&logoColor=white)]()
 [![License](https://img.shields.io/badge/License-Academic_Use-lightgrey)]()
 [![Status](https://img.shields.io/badge/Status-Experiments_Complete-brightgreen)]()
-[![Experiments](https://img.shields.io/badge/Optimizations-69_runs-blue)]()
 [![Topologies](https://img.shields.io/badge/Networks-ER_·_BA_·_WS-orange)]()
 
 </div>
@@ -170,7 +169,7 @@ All network parameters are **anchored to the ER connectivity probability** $p$, 
 
 ## Improvements over SEITRNet Codebase
 
-The SEITRNet codebase (pure R, igraph-based, monolithic notebook) required approximately 1 hour per optimization run at $n = 100$. The refactored SEITRNet++ codebase completes the same run in 1–2 minutes — enabling a 69-experiment parameter sweep in under 5 hours.
+The SEITRNet codebase (pure R, igraph-based) required approximately 1 hour per optimization run at $n = 100$. The refactored SEITRNet++ codebase completes the same run in few minutes.
 
 | # | Improvement | SEITRNet (before) | SEITRNet++ (after) | Impact |
 |---|-------------|--------------------|--------------------|--------|
@@ -182,13 +181,8 @@ The SEITRNet codebase (pure R, igraph-based, monolithic notebook) required appro
 | 6 | **Topology-preserving edge addition** | Generic `sample()` for all network types | ER: fixed-count uniform; BA: degree-proportional; WS: BFS nearest-neighbor + rewiring | Structural properties preserved during demographic events |
 | 7 | **ODE warm-start** | All optimizer starts random (uniform $[0, \zeta]$) | First start from ODE optimal control downsampled to $K$ segments | One start biased toward mean-field basin; reduces median $J$ |
 | 8 | **Two-stage optimization** | Single stage with 20 replicates throughout | Stage 1: 5 reps, loose tolerance; Stage 2: 20 reps, tight tolerance | ~60% faster than single-stage equivalent |
-| 9 | **Parameterized experiment runner** | 20+ copy-pasted notebook cells per configuration | Single `run_experiment()` function; automated grid sweep | Eliminates copy-paste errors; enables 69-run sweep |
-| 10 | **ODE solver as reusable function** | Inline code in notebook; difficult to re-run | `solve_ode_optimal_control()` function; identical output | Reusable; produces $J = 563.314$ in 12 iterations |
-| 11 | **Segment expansion fix** | `(k-1)*interval_length+1` overruns for non-divisible $K$ | `rep(1:K, each=interval_length)[1:total_steps]` matching `expand_u1` | Eliminates NaN for $K \nmid (T+1)$ |
-| 12 | **Pre-experiment diagnosis** | No validation before committing to long runs | 22-section, 135-assertion validation notebook | Catches bugs before multi-hour experiments |
-| 13 | **Session logging** | No persistent record of intermediate results | Timestamped log of every experiment step, timing, and key result | Independent review from log file alone |
-| 14 | **Principled parameter derivation** | Ad-hoc BA and WS parameters | All parameters derived from ER anchor $p$ (SEITRNet convention) | Direct cross-topology comparability |
-| 15 | **Network topology metrics** | Metrics computed during simulation but never analyzed | Dedicated `network_metrics.R` | Enables cross-chapter bridge |
+| 9 | **Pre-experiment diagnosis** | No validation before committing to long runs | 22-section, 135-assertion validation notebook | Catches bugs before multi-hour experiments |
+| 10 | **Network topology metrics** | Metrics computed during simulation but never analyzed | Dedicated `network_metrics.R` | Enables cross-chapter bridge |
 
 ---
 
