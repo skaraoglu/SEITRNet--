@@ -276,6 +276,12 @@ Multi-core CPU recommended (16 cores used)
 
 ---
 
+## Citation
+
+If you use this pipeline or build on this work, please cite: Karaoglu, S., Imran, M. & McKinney, B.A. Network-based SEITR epidemiological model with contact heterogeneity: comparison with homogeneous models for random, scale-free and small-world networks. Eur. Phys. J. Plus 140, 551 (2025). https://doi.org/10.1140/epjp/s13360-025-06481-z
+
+---
+
 <div align="center">
 
 *Built on the [SEITRNet](https://github.com/skaraoglu/SEITRNet) compartmental framework · [Pontryagin's Maximum Principle](https://en.wikipedia.org/wiki/Pontryagin%27s_maximum_principle) · [L-BFGS-B](https://en.wikipedia.org/wiki/Limited-memory_BFGS) box-constrained optimization · [Rcpp](https://www.rcpp.org/) compiled simulation kernel*
