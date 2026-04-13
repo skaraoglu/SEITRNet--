@@ -20,7 +20,7 @@ This repository contains the analysis pipeline for SEITRNet++ on dynamics, contr
 
 We deploy a **stochastic SEITR (Susceptible–Exposed–Infected–Treated–Recovered) agent-based model** on three canonical network families — Erdős–Rényi, Barabási–Albert, and Watts–Strogatz — and use **L-BFGS-B multi-start optimization** on the simulation objective to find network-aware treatment policies.
 
-Updating the SEITRNet; the simulation kernel has been **rewritten from scratch in C++** (via Rcpp) for a speedup over the SEITRNet pure-R codebase, enabling a 69-experiment parameter sweep that completes in under 5 hours.
+Updating the [SEITRNet](https://github.com/skaraoglu/SEITRNet); the simulation kernel has been **rewritten from scratch in C++** (via Rcpp) for a speedup over the [SEITRNet](https://github.com/skaraoglu/SEITRNet) pure-R codebase, enabling a 69-experiment parameter sweep that completes in under 5 hours.
 
 
 ---
@@ -96,7 +96,7 @@ The integrand balances epidemiological burden ($E + I$) against quadratic contro
 </tr>
 </table>
 
-### Parameter Derivation (SEITRNet Convention)
+### Parameter Derivation ([SEITRNet](https://github.com/skaraoglu/SEITRNet) Convention)
 
 All network parameters are **anchored to the ER connectivity probability** $p$, ensuring that cross-topology differences are attributable to structural properties rather than connectivity level:
 
@@ -151,11 +151,11 @@ All network parameters are **anchored to the ER connectivity probability** $p$, 
 
 ## Key Technical Features
 
-**Compiled C++ simulation kernel** — The SEITR agent-based model (697 lines of C++) processes all status transitions, demographic events, and topology-preserving edge addition in compiled code via Rcpp. A flat `int[max_n × max_n]` adjacency matrix provides O(1) edge queries with perfect cache locality. Dead nodes are soft-deleted (flagged, not removed) and their slots recycled for births, eliminating the O(V+E) `igraph::delete_vertices()` reindexing that dominated runtime in the SEITRNet codebase.
+**Compiled C++ simulation kernel** — The SEITR agent-based model (697 lines of C++) processes all status transitions, demographic events, and topology-preserving edge addition in compiled code via Rcpp. A flat `int[max_n × max_n]` adjacency matrix provides O(1) edge queries with perfect cache locality. Dead nodes are soft-deleted (flagged, not removed) and their slots recycled for births, eliminating the O(V+E) `igraph::delete_vertices()` reindexing that dominated runtime in the [SEITRNet](https://github.com/skaraoglu/SEITRNet) codebase.
 
-**SEITRNet–consistent network generators** — ER uses fixed-count node sampling (not independent Bernoulli); BA uses mean-degree preferential attachment where `mean_degree` divides by `n_alive + 1` (matching R's `mean(degree(g))`); WS uses BFS nearest-neighbor search with stochastic rewiring. These generators are applied both at initialization and during demographic edge addition, preserving topology-specific structural properties across the full simulation horizon.
+**[SEITRNet](https://github.com/skaraoglu/SEITRNet)–consistent network generators** — ER uses fixed-count node sampling (not independent Bernoulli); BA uses mean-degree preferential attachment where `mean_degree` divides by `n_alive + 1` (matching R's `mean(degree(g))`); WS uses BFS nearest-neighbor search with stochastic rewiring. These generators are applied both at initialization and during demographic edge addition, preserving topology-specific structural properties across the full simulation horizon.
 
-**Forward–backward sweep ODE solver** — Verbatim transliteration of the SEITRNet MATLAB-style FBSM with RK4 midpoint integration, 0.5-averaging control update for stability, and Simpson's-rule objective evaluation. Converges in exactly 12 iterations to $J_{\text{ODE}} = 563.314$ — matching the published SEITRNet+OptCont result to four decimal places.
+**Forward–backward sweep ODE solver** — Verbatim transliteration of the [SEITRNet](https://github.com/skaraoglu/SEITRNet) MATLAB-style FBSM with RK4 midpoint integration, 0.5-averaging control update for stability, and Simpson's-rule objective evaluation. Converges in exactly 12 iterations to $J_{\text{ODE}} = 563.314$ — matching the published SEITRNet+OptCont result to four decimal places.
 
 **Two-stage multi-start optimization** — Stage 1 (5 replicates, `factr=1e8`, `maxit=500`) explores the objective landscape across 10 initial guesses; Stage 2 (20 replicates, `factr=1e7`, `maxit=1000`) refines the best candidate. The first guess is derived from the ODE optimal control (warm-start), biasing one start toward the mean-field basin.
 
@@ -167,11 +167,11 @@ All network parameters are **anchored to the ER connectivity probability** $p$, 
 
 ---
 
-## Improvements over SEITRNet Codebase
+## Improvements over [SEITRNet](https://github.com/skaraoglu/SEITRNet) Codebase
 
-The SEITRNet codebase (pure R, igraph-based) required approximately 1 hour per optimization run at $n = 100$. The refactored SEITRNet++ codebase completes the same run in few minutes.
+The [SEITRNet](https://github.com/skaraoglu/SEITRNet) codebase (pure R, igraph-based) required approximately 1 hour per optimization run at $n = 100$. The refactored SEITRNet++ codebase completes the same run in few minutes.
 
-| # | Improvement | SEITRNet (before) | SEITRNet++ (after) | Impact |
+| # | Improvement | [SEITRNet](https://github.com/skaraoglu/SEITRNet) (before) | SEITRNet++ (after) | Impact |
 |---|-------------|--------------------|--------------------|--------|
 | 1 | **C++ simulation kernel** | Pure R inner loop with ~200K igraph calls per simulation | Compiled C++ via Rcpp; all transitions in native code | 50–200× wall-clock speedup |
 | 2 | **Flat adjacency matrix** | `igraph` graph object; O(V+E) edge queries | `int[max_n × max_n]` flat array; O(1) lookup | Eliminates graph data structure overhead |
