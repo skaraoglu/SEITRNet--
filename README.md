@@ -37,19 +37,19 @@ Updating the [SEITRNet](https://github.com/skaraoglu/SEITRNet); the simulation k
 
 $$\dot{S} = \Lambda - \frac{\beta_1 S I}{N} - \mu S$$
 
-$$\dot{E} = \frac{\beta_1 S I}{N} - (\beta_2 + \mu)\, E$$
+$$\dot{E} = \frac{\beta_1 S I}{N} - (\beta_2 + \mu) E$$
 
-$$\dot{I} = \beta_2\, E - (\beta_3 + \mu + \delta_I + u(t))\, I$$
+$$\dot{I} = \beta_2 E - (\beta_3 + \mu + \delta_I + u(t)) I$$
 
-$$\dot{T} = u(t) \cdot I - (\mu + \delta_T + \alpha_2)\, T$$
+$$\dot{T} = u(t) \cdot I - (\mu + \delta_T + \alpha_2) T$$
 
-$$\dot{R} = \beta_3\, I + \alpha_2\, T - \mu\, R$$
+$$\dot{R} = \beta_3 I + \alpha_2 T - \mu R$$
 
-where $u(t) \in [0,\, \zeta]$ is the time-varying treatment control applied at each discrete timestep to every infected node.
+where $u(t) \in [0, \zeta]$ is the time-varying treatment control applied at each discrete timestep to every infected node.
 
 ### Optimal Control Objective
 
-$$\min_{u}\;\; J(u) = \int_0^{T_f} \Big[\, E(t) + I(t) + w_1 \cdot u(t)^2 \,\Big]\, dt \qquad \text{s.t.}\;\; 0 \le u(t) \le \zeta$$
+$$\min_{u} J(u) = \int_0^{T_f} \Big[ E(t) + I(t) + w_1 \cdot u(t)^2 \Big] dt \qquad \text{s.t.} 0 \le u(t) \le \zeta$$
 
 The integrand balances epidemiological burden ($E + I$) against quadratic control cost. The ODE-optimal solution is obtained via **Pontryagin's Maximum Principle** (forward–backward sweep with RK4 midpoint integration); the network-optimal solution is obtained via **L-BFGS-B** on stochastic simulation averages with common random numbers.
 
@@ -60,7 +60,7 @@ The integrand balances epidemiological burden ($E + I$) against quadratic contro
 | $\beta_2$ | 0.059 | Progression rate ($E \to I$) |
 | $\beta_3$ | 0.2 | Recovery rate ($I \to R$) |
 | $\alpha_2$ | 0.055 | Treatment recovery ($T \to R$) |
-| $\delta_I,\, \delta_T$ | 0.03 | Disease-induced death rates |
+| $\delta_I, \delta_T$ | 0.03 | Disease-induced death rates |
 | $\mu$ | 0.02 | Natural death rate |
 | $w_1$ | 0.2 | Control cost weight |
 | $\zeta$ | 1.0 | Control upper bound |
@@ -75,9 +75,9 @@ The integrand balances epidemiological burden ($E + I$) against quadratic contro
 <td width="50%">
 
 **Experiment 1 — Cross-Topology Comparison** (45 runs)
-- $p \in \{0.2,\, 0.5,\, 0.9\}$ (anchor connectivity)
+- $p \in \{0.2, 0.5, 0.9\}$ (anchor connectivity)
 - ER (3) + BA (3) + WS (9) = 15 network configs
-- $K \in \{5,\, 20,\, 100\}$ control segments
+- $K \in \{5, 20, 100\}$ control segments
 - $n = 100$ nodes, 20 replicates per evaluation
 
 **Experiment 2 — Structural Metrics** (post-hoc)
@@ -88,9 +88,9 @@ The integrand balances epidemiological burden ($E + I$) against quadratic contro
 <td width="50%">
 
 **Experiment 3 — Network Size Scaling** (24 runs)
-- $n \in \{50,\, 100,\, 200,\, 500\}$
+- $n \in \{50, 100, 200, 500\}$
 - ER, BA, WS at $p = 0.5$ (medium connectivity)
-- $K \in \{5,\, 20\}$
+- $K \in \{5, 20\}$
 - Per-size ODE reference solutions (corrected analysis)
 
 **Experiment 4 — Control Profile Shape** (post-hoc)
@@ -111,7 +111,7 @@ All network parameters are **anchored to the ER connectivity probability** $p$, 
 | **ER** | $p$ | anchor | Baseline homogeneous random mixing |
 | **BA** | $m = \lfloor n \cdot p \rceil$ | Matches ER expected edge count |
 | **WS** | $p_{\text{rewire}} = p$ | Rewiring probability matches ER |
-| | $k \in \{\lfloor 0.05n\rceil,\, \lfloor 0.10n\rceil,\, \lfloor 0.20n\rceil\}$ | Local connectivity sweep, scales with $n$ |
+| | $k \in \{\lfloor 0.05n\rceil, \lfloor 0.10n\rceil, \lfloor 0.20n\rceil\}$ | Local connectivity sweep, scales with $n$ |
 
 ---
 
