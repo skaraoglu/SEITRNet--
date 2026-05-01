@@ -1,5 +1,11 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/hero_seitrnet_pp_dark.png">
+  <img alt="SEITRNet — Network-based SEITR epidemic modeling in R"
+       src="assets/hero_seitrnet_pp_dark.png" width="350">
+</picture>
+
 # Network-Aware Optimal Control of SEITR Epidemics
 
 ### How Contact Network Topology Reshapes Intervention Strategies
