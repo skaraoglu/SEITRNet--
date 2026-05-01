@@ -8,7 +8,9 @@
 
 # SEITRNet++
 
-### Network-Aware Optimal Control of SEITR Epidemics, How Contact Network Topology Reshapes Intervention Strategies
+### Network-Aware Optimal Control of SEITR Epidemics
+
+_How Contact Network Topology Reshapes Intervention Strategies_
 
 [![R](https://img.shields.io/badge/R-≥4.2-276DC3?logo=r&logoColor=white)](https://www.r-project.org/)
 [![C++](https://img.shields.io/badge/C++-Rcpp_Kernel-00599C?logo=cplusplus&logoColor=white)]()
