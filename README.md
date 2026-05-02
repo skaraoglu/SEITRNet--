@@ -96,7 +96,7 @@ The integrand balances epidemiological burden ($E + I$) against quadratic contro
 - Per-size ODE reference solutions (corrected analysis)
 
 **Experiment 4 — Control Profile Shape** (post-hoc)
-- 69 optimized $u_1(t)$ profiles analyzed
+- 69 optimized $u(t)$ profiles analyzed
 - Total effort, peak, front-loading index
 - ODE correlation, temporal variability (CV)
 
