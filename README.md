@@ -199,30 +199,30 @@ The [SEITRNet](https://github.com/skaraoglu/SEITRNet) codebase (pure R, igraph-b
 
 ```
 ├── main_analysis.ipynb           # Main experiment pipeline (R kernel)
-├── supplement.ipynb         # Extended methods, results, visualizations
-├── diagnosis.ipynb              # Pre-experiment validation (22 tests, 135 assertions)
-├── experiment_run.ipynb         # Lightweight standalone experiment runner
+├── supplement.ipynb              # Extended methods, results, visualizations
+├── diagnosis.ipynb               # Pre-experiment validation (22 tests, 135 assertions)
+├── experiment_run.ipynb          # Lightweight standalone experiment runner
 ├── README.md
 │
 ├── src/
-│   ├── seitr_kernel.cpp         # C++ simulation kernel (697 lines)
-│   │                            #   ER/BA/WS generators + demographic edge addition
-│   │                            #   Flat adjacency matrix, soft deletion, in-place counters
-│   │                            #   Sequential node processing (Algorithm 1)
-│   ├── ode_control.R            # Forward–backward sweep (Pontryagin's Maximum Principle)
-│   ├── experiment.R             # run_experiment(): optimization, forward, no-control modes
-│   ├── utils.R                  # Simpson's rule, expand_u1, ODE warm-start extraction
-│   ├── plotting.R               # ggplot2 visualization functions
-│   └── network_metrics.R        # Topology metrics (C, L, σ, Q)
+│   ├── seitr_kernel.cpp          # C++ simulation kernel (697 lines)
+│   │                             #   ER/BA/WS generators + demographic edge addition
+│   │                             #   Flat adjacency matrix, soft deletion, in-place counters
+│   │                             #   Sequential node processing (Algorithm 1)
+│   ├── ode_control.R             # Forward–backward sweep (Pontryagin's Maximum Principle)
+│   ├── experiment.R              # run_experiment(): optimization, forward, no-control modes
+│   ├── utils.R                   # Simpson's rule, expand_u1, ODE warm-start extraction
+│   ├── plotting.R                # ggplot2 visualization functions
+│   └── network_metrics.R         # Topology metrics (C, L, σ, Q)
 │
 └── results/
-    ├── ch3_analysis_log.txt     # Complete timestamped session log
-    ├── exp1_summary.csv         # 45 cross-topology results (J_optim, J_forward, J_noctl)
+    ├── ch3_analysis_log.txt      # Complete timestamped session log
+    ├── exp1_summary.csv          # 45 cross-topology results (J_optim, J_forward, J_noctl)
     ├── exp2_topology_metrics.csv # 15 network metric profiles (20-replicate averages)
-    ├── exp2_correlations.csv    # Metric–performance rank correlations per K
-    ├── exp3_scaling.csv         # 24 size-scaling results (n = 50–500)
-    ├── exp4_control_shape.csv   # 69 control profile shape descriptors
-    └── rds/                     # Full R objects (trajectories, control profiles)
+    ├── exp2_correlations.csv     # Metric–performance rank correlations per K
+    ├── exp3_scaling.csv          # 24 size-scaling results (n = 50–500)
+    ├── exp4_control_shape.csv    # 69 control profile shape descriptors
+    └── rds/                      # Full R objects (trajectories, control profiles)
         ├── ode_solution.rds
         ├── exp1_results.rds
         └── exp3_results.rds
